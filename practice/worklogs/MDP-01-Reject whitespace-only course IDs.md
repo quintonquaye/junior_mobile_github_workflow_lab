@@ -95,7 +95,7 @@
       - not created yet
 
 - Files inspected: 
-    * [lib/controllers/course_controller.dart](../../lib/controllers/course_controller.dart)
+    * [lib/repositories/course_repository.dart](../../lib/repositories/course_repository.dart)
 
 ## Implementation
 - Changes made: 
@@ -121,17 +121,37 @@
 
 ## Verification
 - `dart format .`:
+    * Formatted lib/main.dart
+    * Formatted lib/repositories/course_repository.dart
+    * Formatted test/repositories/course_repository_test.dart
+    * Formatted 7 files (3 changed)
+
 - `flutter analyze`:
+    * info • The imported package 'flutter' isn't a dependency of the importing package • lib/main.dart:1:8 • depend_on_referenced_packages
+    * info • Local variables should be final • test/repositories/course_repository_test.dart:97:7 • prefer_final_locals
+
 - Focused test:
+    * `flutter test test/repositories/course_repository_test.dart`
+    - All Tests passed.
 - Full `flutter test`:
-- Manual checks, if applicable:
+    * flutter test
+    - All tests passed.
+
+- Manual checks, if applicable: not applicable
 
 ## Review
 - Diff reviewed: Not created yet
-- Known limitations: Not created yet
+
+- Known limitations: 
+    * did not change duplicate-ID case sensitivity
+
 - Follow-up issue(s): Not created yet
 
 ## Reflection
 - What I learned: Not created yet
-- What I would do differently: Not created yet
+    * I learned that checking whether a string is empty is different from checking whether it contains meaningful characters. 
+    * I also learned to inspect existing tests and validations in other classes before assuming coverage is missing.
+    * I also learned to take time to properly investigate the problem before doing any testing, write what i find as potential issues and state my findings clearly. 
 
+- What I would do differently: 
+    * Next time i want to take more time to investigate the initial problem and current behavior before making assumptions.

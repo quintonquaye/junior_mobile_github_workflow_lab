@@ -24,7 +24,7 @@ class CourseRepository {
     if (normalizedTitle.isEmpty) {
       throw ArgumentError('Course title cannot be empty.');
     }
-    
+
     //Duplicate sensitivity case
     final existing = await _api.fetchCourses();
     if (existing.any((item) => item.id == normalizedId)) {

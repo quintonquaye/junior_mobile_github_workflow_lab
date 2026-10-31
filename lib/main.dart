@@ -87,8 +87,7 @@ class _CourseHomePageState extends State<CourseHomePage> {
             ),
             const SizedBox(height: 12),
             if (_loading) const LinearProgressIndicator(),
-            if (_error != null)
-              Text(_error!, key: const Key('course-error')),
+            if (_error != null) Text(_error!, key: const Key('course-error')),
             Expanded(
               child: _courses.isEmpty && !_loading
                   ? const Center(child: Text('No courses found'))
