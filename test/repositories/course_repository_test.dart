@@ -45,5 +45,103 @@ void main() {
 
       expect(result.map((course) => course.id), contains('photo-101'));
     });
+
+    test("Spaces-only ID is rejected with ArgumentError", () async{
+      ///Arrange
+      final repository = CourseRepository(CourseApi());
+
+      ///Act
+      const course = Course(
+        id: '  ', 
+        title: 'Composition', 
+        isPublished: true
+      );
+
+      ///Assert - in this current validation setup will not throw, causing fail
+      ///validation checks course.id not result of normalizedId
+      await expectLater(repository.createCourse(course), throwsA(isArgumentError));
+
+      ///My assumption is the course will be created with trimmed space(empty space)
+      var result = await repository.createCourse(course);
+      expect(result.id, isEmpty);
+    });
+
+    test("Tabs-only ID is reject with ArgumentError", () async {
+      ///Arrange
+      final repository = CourseRepository(CourseApi());
+
+      ///Act
+      const course = Course(
+        id: '\t\t', 
+        title: 'Composition', 
+        isPublished: true
+      );
+
+      ///Assert - in this current `createCourse()` validation will not throw, causing fail
+      ///validation does not include tabbed-space checks
+      ///validation checks `course.id` not result of normalizedId
+      await expectLater(repository.createCourse(course), throwsA(isArgumentError));
+
+      ///My assumption is the course will be created with trimmed space(empty space)
+      var result = await repository.createCourse(course);
+      expect(result.id, isEmpty);
+    });
+
+
+    test("New-Line-Only input is rejected with ArgumentError", () async {
+      ///Arrange
+      final repository = CourseRepository(CourseApi());
+
+      ///Act
+      const course = Course(
+        id: '\n\n', 
+        title: 'Composition', 
+        isPublished: true
+      );
+      
+      ///Assert: - in this current `createCourse` validation will not throw, causing fail
+      ///Validation does not include new-line checks
+      ///Validation checks only `course.id` not result of normalizedId
+      await expectLater(repository.createCourse(course), throwsA(isArgumentError));
+
+      ///My assumption is the course will be created with trimmed space(empty space)
+      var result = await repository.createCourse(course);
+      expect(result.id, isEmpty);
+    });
+
+
+    test("Existing valid input", () async {
+      ///Arrange: 
+      final repository = CourseRepository(CourseApi());
+
+      ///Act:
+      const course = Course(
+        id: 'PHO_101', 
+        title: 'Composition', 
+        isPublished: true
+      );
+
+      ///call `createCourse()`
+      var result = await repository.createCourse(course);
+
+      ///Assert: my assumption is the in this current `createCourse()` the test will pass.
+      ///Returning value is a normalized course.
+      expect(result, equals(course));
+
+      ///finding: this result failed because the testing expectation is 'eventhough the properties are identical, 
+      ///they occupy separate object identities
+
+      ///checking identites
+      expect(identical(result, course), isTrue);
+      ///finding: this test also fails that they are not identical
+      
+      ///testing each property individually to find differences
+      expect(result.id, equals("PHO_101"));
+      expect(result.title, equals("Composition"));
+      expect(result.isPublished, isTrue);
+      expect(result.description, isEmpty);
+      //results: each returned property is of the same value, but when compared in identical, 
+      //result in a failure
+    });
   });
 }
