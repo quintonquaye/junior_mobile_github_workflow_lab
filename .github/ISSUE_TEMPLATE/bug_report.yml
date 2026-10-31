@@ -1,0 +1,54 @@
+name: Bug report
+description: Report incorrect or unexpected behavior.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: "Describe one problem. Include observable behavior and avoid prescribing a solution before the cause is understood."
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Where does this behavior occur?
+      placeholder: "When a caller creates a course..."
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: Current behavior
+      description: What happens now? Include minimal reproduction steps.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should happen instead?
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Add observable, testable checkboxes.
+      value: |
+        - [ ] 
+        - [ ] 
+    validations:
+      required: true
+  - type: textarea
+    id: tests
+    attributes:
+      label: Test ideas
+      description: Which normal, edge, and failure cases should be checked?
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope boundaries
+      description: What should not change in this ticket?
+    validations:
+      required: false
