@@ -126,9 +126,7 @@
     * Formatted test/repositories/course_repository_test.dart
     * Formatted 7 files (3 changed)
 
-- `flutter analyze`:
-    * info • The imported package 'flutter' isn't a dependency of the importing package • lib/main.dart:1:8 • depend_on_referenced_packages
-    * info • Local variables should be final • test/repositories/course_repository_test.dart:97:7 • prefer_final_locals
+- `flutter analyze`: - Passed.
 
 - Focused test:
     * `flutter test test/repositories/course_repository_test.dart`

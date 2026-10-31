@@ -94,7 +94,7 @@ void main() {
           Course(id: 'PHO_101', title: 'Composition', isPublished: true);
 
       ///call `createCourse()`
-      var result = await repository.createCourse(course);
+      final result = await repository.createCourse(course);
 
       ///Assert: my assumption is the in this current `createCourse()` the test will pass.
       ///Returning value is a normalized course.
