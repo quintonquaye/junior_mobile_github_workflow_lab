@@ -38,6 +38,7 @@ void main() {
       );
     });
 
+     //Duplicate sensitivity case
     test('search is case-insensitive', () async {
       final repository = CourseRepository(CourseApi());
 
@@ -57,13 +58,9 @@ void main() {
         isPublished: true
       );
 
-      ///Assert - in this current validation setup will not throw, causing fail
-      ///validation checks course.id not result of normalizedId
-      await expectLater(repository.createCourse(course), throwsA(isArgumentError));
-
-      ///My assumption is the course will be created with trimmed space(empty space)
-      var result = await repository.createCourse(course);
-      expect(result.id, isEmpty);
+      ///Assert - in this modified `createCourse()` my assumption is that the validation will throw an ArgumentError, 
+      ///pasing the test
+      await expectLater(repository.createCourse(course), throwsArgumentError);
     });
 
     test("Tabs-only ID is reject with ArgumentError", () async {
@@ -77,14 +74,9 @@ void main() {
         isPublished: true
       );
 
-      ///Assert - in this current `createCourse()` validation will not throw, causing fail
-      ///validation does not include tabbed-space checks
-      ///validation checks `course.id` not result of normalizedId
-      await expectLater(repository.createCourse(course), throwsA(isArgumentError));
-
-      ///My assumption is the course will be created with trimmed space(empty space)
-      var result = await repository.createCourse(course);
-      expect(result.id, isEmpty);
+      ///Assert - in this modified `createCourse()` my assumption is that the validation will throw an ArgumentError, 
+      ///pasing the test
+      await expectLater(repository.createCourse(course), throwsArgumentError);
     });
 
 
@@ -99,14 +91,9 @@ void main() {
         isPublished: true
       );
       
-      ///Assert: - in this current `createCourse` validation will not throw, causing fail
-      ///Validation does not include new-line checks
-      ///Validation checks only `course.id` not result of normalizedId
-      await expectLater(repository.createCourse(course), throwsA(isArgumentError));
-
-      ///My assumption is the course will be created with trimmed space(empty space)
-      var result = await repository.createCourse(course);
-      expect(result.id, isEmpty);
+      ///Assert - in this modified `createCourse()` my assumption is that the validation will throw an ArgumentError, 
+      ///pasing the test
+      await expectLater(repository.createCourse(course), throwsArgumentError);
     });
 
 
@@ -126,13 +113,13 @@ void main() {
 
       ///Assert: my assumption is the in this current `createCourse()` the test will pass.
       ///Returning value is a normalized course.
-      expect(result, equals(course));
+      //expect(result, equals(course));
 
       ///finding: this result failed because the testing expectation is 'eventhough the properties are identical, 
       ///they occupy separate object identities
 
       ///checking identites
-      expect(identical(result, course), isTrue);
+      //expect(identical(result, course), isTrue);
       ///finding: this test also fails that they are not identical
       
       ///testing each property individually to find differences

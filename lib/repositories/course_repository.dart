@@ -18,13 +18,14 @@ class CourseRepository {
 
     // Intentional practice defect: validation checks the raw input.
     // Ticket MDP-01 asks you to validate the normalized ID instead.
-    if (course.id.isEmpty) {
+    if (normalizedId.isEmpty) {
       throw ArgumentError('Course ID cannot be empty.');
     }
     if (normalizedTitle.isEmpty) {
       throw ArgumentError('Course title cannot be empty.');
     }
-
+    
+    //Duplicate sensitivity case
     final existing = await _api.fetchCourses();
     if (existing.any((item) => item.id == normalizedId)) {
       throw ArgumentError('A course with this ID already exists.');

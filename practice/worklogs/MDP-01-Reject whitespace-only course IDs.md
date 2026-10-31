@@ -15,7 +15,7 @@
 - Relevant code/layer: CourseRepository - it is currently responsible for normalizing and validating inputs before storing Course.
 
 - Assumptions or questions: 
-    * Are whitespace (more than 1) trimned?
+    * Are whitespace (more than 1) trimmed?
     * Are empty/invalid inputs with 2 or more spaces thrown with ArgumentError?
     * Does the Repository layer need to be responsible for this validation action or can it be responsible elsewhere, such as the Display layer?
 
@@ -95,12 +95,29 @@
       - not created yet
 
 - Files inspected: 
-    * lib/controllers/course_controller.dart
+    * [lib/controllers/course_controller.dart](../../lib/controllers/course_controller.dart)
 
 ## Implementation
-- Changes made: Not created yet
-- Why this layer was selected: Not created yet
-- Alternatives considered: Not created yet
+- Changes made: 
+    * `CourseRepository.createCourse()`:
+      - updated course validation check `if(course.id.isEmpty)` to `if(normalizedId.isEmpty)`, rejecting empty ID's after timed whitespace.
+
+    * Spaces-Only Input test: `await expectLater(repository.createCourse(course), throwsArgumentError)`
+      - because the `CourseRepository.createCourse()` validation now checks `if(normalizedId.isEmpty)`, argumentError is thrown properly
+
+    * Tabs-Only Input test: `await expectLater(repository.createCourse(course), throwsArgumentError)`
+      - because the `CourseRepository.createCourse()` validation now checks `if(normalizedId.isEmpty)`, argumentError is thrown properly
+
+    * New-Line-Only Input test: `await expectLater(repository.createCourse(course), throwsArgumentError)`
+      - because the `CourseRepository.createCourse()` validation now checks `if(normalizedId.isEmpty)`, argumentError is thrown properly
+
+
+- Why this layer was selected: 
+    * The CourseRepository was selected because it owns the relevant data validation rule for course creation. 
+    * Fixing it there protects callers beyond the UI.
+
+- Alternatives considered:
+    * I have strongly considered moving the data validation from the CourseRepository and to a new page called courseCreationPage. There, the UI is responsible for user input and validation checks and submission, before it is sent to the CourseRepository. I didn't make this decision because it increased the scope of what was assigned, I would consider opening a `fix` ticket to create this new page and implement this modification there.
 
 ## Verification
 - `dart format .`:
