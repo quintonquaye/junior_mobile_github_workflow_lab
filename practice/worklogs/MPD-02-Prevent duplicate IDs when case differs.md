@@ -122,28 +122,45 @@
 
 ## Implementation
 - Changes made: 
-  - Not yet created
+  Updated createCourse validation check `var caseInsensitiveID = normalizedId.toLowerCase();` and updated the conditional check `if (existing.any((item) => item.id.toLowerCase() == caseInsensitiveID))` to include the `caseInsensitiveID` and check existing `item.id.toLowercase`. 
+
+  * Duplicate detection ignores case: 
+    - `await expectLater(future, throwsA(isArgumentError));` 
+      * creating a course now properly throws a `isArgumentError` when checks with case-insensitivity.
+
+  * Duplicate detection trims IDs before comparing
+    * creating a course now properly throws a `isArgumentError` after trimming IDs and checking with case-insensitivity.
+  
+  * A Duplicate attempt does not add another record:
+    - Because case-insensitive validation happens, this function now properly throws isArgumentError and as a result does not create a new course record.
+
+  * A test cover both case directions and surrounding whitespace:
+    - After adding case-insensitive validation checks on both existing items `item.id.toLowerCase()` and variable `caseInsensitiveID` this test now properly trims whitespace, throws an `ArgumentError`, and no new courses have been added.
 
 
 - Why this layer was selected: 
-    * The CourseRepository was selected because it owns the relevant data validation rule for course creation. 
 
+  * The CourseRepository was selected because it owns the relevant data validation rule for course creation and is a direct interface with the courseAPI to get relevant data. 
+
+  
 - Alternatives considered:
   - Not yet created
+
 
 ## Verification
 - `dart format .`:
   - Not yet created
 
 - `flutter analyze`: 
-  - Not yet created
+  - 4 issues found: The variable name 'PHOTO101' isn't a lowerCamelCase identifier
 
 - Focused test:
     * `flutter test test/repositories/course_repository_test.dart`
-    - not yet created
+    - All (14) tests passed!
+
 - Full `flutter test`:
     * flutter test
-    - not yet created
+    - All (16) tests passed!
 
 - Manual checks, if applicable: not applicable
 

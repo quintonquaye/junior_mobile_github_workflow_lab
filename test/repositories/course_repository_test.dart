@@ -86,8 +86,8 @@ void main() {
     });
   });
 
-group("Prevent duplicate ID's when case differs", (){
-  test("Existing valid input", () async {
+  group("Prevent duplicate ID's when case differs", () {
+    test("Existing valid input", () async {
       ///Arrange:
       final repository = CourseRepository(CourseApi());
 
@@ -118,217 +118,185 @@ group("Prevent duplicate ID's when case differs", (){
       //result in a failure
     });
   });
-  
-  group("02-Prevent duplicate IDs when case differs", (){
-    test("Happy path: adding valid course still works", () async{
+
+  group("02-Prevent duplicate IDs when case differs", () {
+    test("Happy path: adding valid course still works", () async {
       ///Arange: setup a photography cours(photo-101), seed it into the courseAPI
-      Course photo101 = Course(
-        id: "photo-101", 
-        title: "Photo Basics", 
-        isPublished: true, 
-        description: "can do some cool photography things"
-      );
+      final photo101 = Course(
+          id: "photo-101",
+          title: "Photo Basics",
+          isPublished: true,
+          description: "can do some cool photography things");
 
-      Course photo102 = Course(
-        id: "photo-102", 
-        title: "Photo Basics", 
-        isPublished: true, 
-        description: "can do some cool photography things"
-      );
+      final photo102 = Course(
+          id: "photo-102",
+          title: "Photo Basics",
+          isPublished: true,
+          description: "can do some cool photography things");
 
-      var courseApi = CourseApi(initialCourses: [photo101]);
-      var courseRepository = CourseRepository(courseApi);
+      final courseApi = CourseApi(initialCourses: [photo101]);
+      final courseRepository = CourseRepository(courseApi);
 
-      //get course data 
-      var seedData = await courseRepository.getPublishedCourses();
+      //get course data
+      final seedData = await courseRepository.getPublishedCourses();
 
       //My assumption is that the seeded data should come back as only 1
       expect(seedData.length, equals(1));
 
-      ///Act: attempt to add PHOTO-101 
+      ///Act: attempt to add PHOTO-101
       await courseRepository.createCourse(photo102);
 
-      var newSeedData = await courseRepository.getPublishedCourses();
+      final newSeedData = await courseRepository.getPublishedCourses();
 
       // assmption is that new course has been created and added to the course list(2)
       expect(newSeedData.length, equals(2));
-  
     });
-    test("test expected duplicate behavior with same case", () async{
+    test("test expected duplicate behavior with same case", () async {
       ///Arange: setup a photography course(photo-101), seed it into the courseAPI
-      Course photo101 = Course(
-        id: "photo-101", 
-        title: "Photo Basics", 
-        isPublished: true, 
-        description: "can do some cool photography things"
-      );
+      final photo101 = Course(
+          id: "photo-101",
+          title: "Photo Basics",
+          isPublished: true,
+          description: "can do some cool photography things");
 
-      var courseApi = CourseApi(initialCourses: [photo101]);
-      var courseRepository = CourseRepository(courseApi);
+      final courseApi = CourseApi(initialCourses: [photo101]);
+      final courseRepository = CourseRepository(courseApi);
 
-      //Act: create PHOTO-101 course 
-      var future = courseRepository.createCourse(photo101);
+      //Act: create PHOTO-101 course
+      final future = courseRepository.createCourse(photo101);
 
-      //My assumption is that the course creation will fail, becuase the course.id will appear the same 
+      //My assumption is that the course creation will fail, becuase the course.id will appear the same
       await expectLater(future, throwsA(isArgumentError));
-
     });
 
-    test("Duplicate detection ignores case", () async{
+    test("Duplicate detection ignores case", () async {
       ///Arange: setup a photography course(photo-101), seed it into the courseAPI
-      Course photo101 = Course(
-        id: "photo-101", 
-        title: "Photo Basics", 
-        isPublished: true, 
-        description: "can do some cool photography things"
-      );
+      final photo101 = Course(
+          id: "photo-101",
+          title: "Photo Basics",
+          isPublished: true,
+          description: "can do some cool photography things");
 
-      Course PHOTO101 = Course(
-        id: "PHOTO-101", 
-        title: "Photo Basics", 
-        isPublished: true, 
-        description: "can do some cool photography things"
-      );
+      final PHOTO101 = Course(
+          id: "PHOTO-101",
+          title: "Photo Basics",
+          isPublished: true,
+          description: "can do some cool photography things");
 
-      var courseApi = CourseApi(initialCourses: [photo101]);
-      var courseRepository = CourseRepository(courseApi);
+      final courseApi = CourseApi(initialCourses: [photo101]);
+      final courseRepository = CourseRepository(courseApi);
 
-      ///Act: create PHOTO-101 course 
-      var future = courseRepository.createCourse(PHOTO101);
-      
-      ///Assumption: My assumption is that the course creation will fail, becuase the course.id will appear the same 
-      ///even if upper or lowercase because ("==" This method compares each individual code unit of the strings. It does not check for Unicode equivalence.)
-      //await expectLater(future, throwsA(isArgumentError));
+      ///Act: create PHOTO-101 course
+      final future = courseRepository.createCourse(PHOTO101);
 
-      ///result is, my assumption failed because the course.id did not appear case-insensitive during current validation,
-      ///it in-fact created the course.
-      
-      ///Act: Call createCourse()
-      await future;
-      ///Get the courses list
-      var courses = await courseRepository.getPublishedCourses();
-
-      ///Assumption: My assumption is that current published will show 2 published courses
-      await expectLater(courses.length, equals(2));
+      ///Assumption: My assumption is that the course creation will fail, becuase the course.id will appear the same
+      ///after validation with case-insensitivity
+      await expectLater(future, throwsA(isArgumentError));
     });
 
-    test("Duplicate detection trims IDs before comparing", () async{
+    test("Duplicate detection trims IDs before comparing", () async {
       ///Arange: setup a photography cours(photo-101), seed it into the courseAPI
-      Course photo101 = Course(
-        id: "photo-101", 
-        title: "Photo Basics", 
-        isPublished: true, 
-        description: "can do some cool photography things"
-      );
+      final photo101 = Course(
+          id: "photo-101",
+          title: "Photo Basics",
+          isPublished: true,
+          description: "can do some cool photography things");
 
-      Course PHOTO101 = Course(
-        id: " PHOTO-101 ", 
-        title: "Photo Basics", 
-        isPublished: true, 
-        description: "can do some cool photography things"
-      );
+      final PHOTO101 = Course(
+          id: " PHOTO-101 ",
+          title: "Photo Basics",
+          isPublished: true,
+          description: "can do some cool photography things");
 
-      Course photo102 = Course(
-        id: " photo-102 ", 
-        title: "Photo Basics", 
-        isPublished: true, 
-        description: "can do some cool photography things"
-      );
+      final photo102 = Course(
+          id: " photo-102 ",
+          title: "Photo Basics",
+          isPublished: true,
+          description: "can do some cool photography things");
 
-      var courseApi = CourseApi(initialCourses: [photo101]);
-      var courseRepository = CourseRepository(courseApi);
+      final courseApi = CourseApi(initialCourses: [photo101]);
+      final courseRepository = CourseRepository(courseApi);
 
-      ///Act: attempt to add PHOTO-101 
-      await courseRepository.createCourse(PHOTO101);
-
-      var seedData = await courseRepository.getPublishedCourses();
-
-      // assmption is that duplicate course has been created and trimmed before added to the course list
-      expect(seedData[1].id, equals("PHOTO-101"));
+      ///Act: attempt to add PHOTO-101, this should fail with a throw is ArgumentError
+      final future = courseRepository.createCourse(PHOTO101);
+      await expectLater(future, throwsA(isArgumentError));
 
       ///Act: attempt to add photo-102
       await courseRepository.createCourse(photo102);
-
-      var newSeedData = await courseRepository.getPublishedCourses();
+      final newSeedData = await courseRepository.getPublishedCourses();
 
       // assmption is that new course has been created and trimmed before added to the course list
-      expect(newSeedData[2].id, equals("photo-102"));
+      expect(newSeedData[1].id, equals("photo-102"));
     });
 
-    test("A Duplicate attempt does not add another record", () async{
+    test("A Duplicate attempt does not add another record", () async {
       ///Arange: setup a photography course(photo-101), seed it into the courseAPI
-      Course photo101 = Course(
-        id: "photo-101", 
-        title: "Photo Basics", 
-        isPublished: true, 
-        description: "can do some cool photography things"
-      );
+      final photo101 = Course(
+          id: "photo-101",
+          title: "Photo Basics",
+          isPublished: true,
+          description: "can do some cool photography things");
 
-      Course PHOTO101 = Course(
-        id: "PHOTO-101", 
-        title: "Photo Basics", 
-        isPublished: true, 
-        description: "can do some cool photography things"
-      );
+      final PHOTO101 = Course(
+          id: "PHOTO-101",
+          title: "Photo Basics",
+          isPublished: true,
+          description: "can do some cool photography things");
 
-      var courseApi = CourseApi(initialCourses: [photo101]);
-      var courseRepository = CourseRepository(courseApi);
+      final courseApi = CourseApi(initialCourses: [photo101]);
+      final courseRepository = CourseRepository(courseApi);
 
-      //Act: create PHOTO-101 course 
-      var future = courseRepository.createCourse(photo101);
+      //Act: create PHOTO-101 course
+      final future = courseRepository.createCourse(photo101);
 
-      //My assumption is that the course creation will fail, becuase the course.id will appear the same 
+      //My assumption is that the course creation will fail, becuase the course.id will appear the same
       await expectLater(future, throwsA(isArgumentError));
 
       ///Get the courses list
-      var courses = await courseRepository.getPublishedCourses();
+      final courses = await courseRepository.getPublishedCourses();
 
       ///Assumption: My assumption is that because the isArgumentError is thrown, no new courses will be created
       await expectLater(courses.length, equals(1));
 
-
       ///Act: Call createCourse()
-      await courseRepository.createCourse(PHOTO101);
+      ///Assumption this should also fail because, it is a duplicate and validation uses case insensitivity.
+      final newFuture = courseRepository.createCourse(PHOTO101);
+      await expectLater(newFuture, throwsA(isArgumentError));
 
-      ///Get the courses list
-      var newCourses = await courseRepository.getPublishedCourses();
-
-      ///Assumption: My assumption is that current published will show 2 published courses
-      await expectLater(newCourses.length, equals(2));
+      final newCourses = await courseRepository.getPublishedCourses();
+      await expectLater(newCourses.length, equals(1));
     });
 
-    test("A test cover both case directions and surrounding whitespace", () async{
-       ///Arange: setup a photography course(photo-101), seed it into the courseAPI
-      Course photo101 = Course(
-        id: " photo-101 ", 
-        title: "Photo Basics", 
-        isPublished: true, 
-        description: "can do some cool photography things"
-      );
+    test("A test cover both case directions and surrounding whitespace",
+        () async {
+      ///Arange: setup a photography course(photo-101), seed it into the courseAPI
+      final photo101 = Course(
+          id: " photo-101 ",
+          title: "Photo Basics",
+          isPublished: true,
+          description: "can do some cool photography things");
 
-      Course PHOTO101 = Course(
-        id: "PHOTO-101", 
-        title: "Photo Basics", 
-        isPublished: true, 
-        description: "can do some cool photography things"
-      );
+      final PHOTO101 = Course(
+          id: "PHOTO-101",
+          title: "Photo Basics",
+          isPublished: true,
+          description: "can do some cool photography things");
 
-      var courseApi = CourseApi(initialCourses: [PHOTO101]);
-      var courseRepository = CourseRepository(courseApi);
+      final courseApi = CourseApi(initialCourses: [PHOTO101]);
+      final courseRepository = CourseRepository(courseApi);
 
-      ///Act: create PHOTO-101 course 
-      var future = courseRepository.createCourse(photo101);
-      
-      ///Act: Call createCourse()
-      await future;
+      ///Act: create PHOTO-101 course
+      final future = courseRepository.createCourse(photo101);
+
+      ///Asumption: this will fail due to the validation guards with case-insensitivity for both items checked
+      await expectLater(future, throwsA(isArgumentError));
+
       ///Get the courses list
-      var courses = await courseRepository.getPublishedCourses();
+      final courses = await courseRepository.getPublishedCourses();
 
-      ///Assumption: My assumption is that current published will show 2 published courses
-      await expectLater(courses.length, equals(2));
-
-      /// white space will be trimmed from input
-      await expectLater(courses[1].id, equals("photo-101"));
+      ///Assumption: My assumption is that current published will show only 1 published course
+      ///because no new course has been added
+      await expectLater(courses.length, equals(1));
     });
   });
 }

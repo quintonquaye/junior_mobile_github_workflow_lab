@@ -27,7 +27,12 @@ class CourseRepository {
 
     //Duplicate sensitivity case
     final existing = await _api.fetchCourses();
-    if (existing.any((item) => item.id == normalizedId)) {
+   
+    //make the input the same case when searching
+    final caseInsensitiveID = normalizedId.toLowerCase();
+    
+    //search the list with case-insensitive input for both ends
+    if (existing.any((item) => item.id.toLowerCase() == caseInsensitiveID)) {
       throw ArgumentError('A course with this ID already exists.');
     }
 
@@ -36,6 +41,7 @@ class CourseRepository {
       title: normalizedTitle,
       description: course.description.trim(),
     );
+
     await _api.addCourse(normalizedCourse);
     return normalizedCourse;
   }
