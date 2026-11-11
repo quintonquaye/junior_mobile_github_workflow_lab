@@ -165,12 +165,14 @@
 - Manual checks, if applicable: not applicable
 
 ## Review
-- Diff reviewed: Not created yet
+- Diff reviewed: 
+  - Reviewed the Git diff, and confirmed the changes are specific to the courseRepository validation and its tests
 
 - Known limitations: 
-    * Do not change title search behavior or add a new ID format.
+    * The change prevents duplicate IDs when case differs through case-insensitive validation
+    * Did not change title search behavior or add a new ID format.
 
-- Follow-up issue(s): Not created yet
+- Follow-up issue(s): follow-up: #3 Trim search input before searching.
 
 ## Reflection
-- Not yet created
+- I learned I need to evaluate the solutions more before starting my tests to know about other options i could provide to solve the current issue, also to make notes about how i want to test each, rather than just jump into testing.

@@ -77,4 +77,15 @@ Then open a PR on GitHub, complete the PR template, link the actual issue number
 ## Learning goal
 
 Success is not simply making all tests green. Success is showing a professional chain of reasoning: clear issue → focused test → minimal implementation → verification evidence → reviewable PR → respectful collaboration.
+
+## Daily Log
+
+| Date | name |
+|---|---|
+| 10/29/2026 | [MDP-01-Reject whitespace-only course IDs](practice/worklogs/MDP-01-Reject%20whitespace-only%20course%20IDs.md) |
+| 11/5/2026 | [MPD-02-Prevent duplicate IDs when case differs](practice/worklogs/MPD-02-Prevent%20duplicate%20IDs%20when%20case%20differs.md) |
+
+---
+
+
 # junior_mobile_github_workflow_lab

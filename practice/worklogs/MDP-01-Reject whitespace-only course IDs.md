@@ -21,10 +21,10 @@
 
 
 ## Test plan
-- [ ] Happy path
-- [ ] Failure/edge case
-- [ ] Regression test
-- [ ] Existing related tests
+- [X] Happy path
+- [X] Failure/edge case
+- [X] Regression test
+- [X] Existing related tests
 
 ## Investigation
 - Reproduction steps based on test ideas:
